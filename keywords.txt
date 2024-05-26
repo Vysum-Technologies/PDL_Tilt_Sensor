@@ -1,0 +1,17 @@
+PDL_Tilt_Sensor    KEYWORD1
+init               KEYWORD2
+calibrate          KEYWORD2
+getAngleX          KEYWORD2
+getAngleY          KEYWORD2
+isVertical         KEYWORD2
+setDebugStatus     KEYWORD2
+setVerticalThresholds KEYWORD2
+setLoopDelay       KEYWORD2
+setSampleSize      KEYWORD2
+setTiltedCallback  KEYWORD2
+setLevelCallback   KEYWORD2
+IMU_DEBUG_STATUS   KEYWORD2
+IMUEventCallback   KEYWORD2
+imuTask            KEYWORD2
+processIMUData     KEYWORD2
+checkTiltStatus    KEYWORD2
