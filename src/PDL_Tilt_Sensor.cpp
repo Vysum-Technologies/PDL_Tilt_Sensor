@@ -32,6 +32,13 @@ void PDL_Tilt_Sensor::init(uint32_t priority) {
     xTaskCreate(imuTask, "IMU_TASK", TASK_STACK_SIZE, this, priority, &imu_task_handle);
 }
 
+void PDL_Tilt_Sensor::deinit() {
+    if (imu_task_handle != NULL) {
+        vTaskDelete(imu_task_handle);
+        imu_task_handle = NULL;
+    }
+}
+
 void PDL_Tilt_Sensor::imuTask(void *pvParameters) {
     PDL_Tilt_Sensor *instance = static_cast<PDL_Tilt_Sensor*>(pvParameters);
     instance->xLastWakeTime = xTaskGetTickCount();

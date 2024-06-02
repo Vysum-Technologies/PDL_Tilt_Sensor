@@ -19,7 +19,8 @@ public:
     using IMUEventCallback = void (*)(); // Type alias for callback functions
 
     PDL_Tilt_Sensor();
-    void init(uint32_t priority = 2);
+    void init(uint32_t priority = 1);
+    void deinit();
     void calibrate();
     float getAngleX() const;
     float getAngleY() const;
@@ -38,9 +39,9 @@ private:
     void checkTiltStatus();
 
     LSM6DS3 imu;
-    MovingAverage<int16_t, 16> ax_filter;
-    MovingAverage<int16_t, 16> ay_filter;
-    MovingAverage<int16_t, 16> az_filter;
+    MovingAverage<int16_t, 8> ax_filter;
+    MovingAverage<int16_t, 8> ay_filter;
+    MovingAverage<int16_t, 8> az_filter;
     TaskHandle_t imu_task_handle;
 
     float angle_x;
