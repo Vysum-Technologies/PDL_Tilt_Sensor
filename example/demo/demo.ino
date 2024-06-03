@@ -3,18 +3,22 @@
 
 PDL_Tilt_Sensor imu;
 
-void onTilted() {
+void onTilted()
+{
     Serial.println("Device is tilted");
 }
 
-void onLevel() {
+void onLevel()
+{
     Serial.println("Device is level");
 }
 
-void setup() {
+void setup()
+{
     // Initialize Serial for debugging outputs
     Serial.begin(115200);
-    while (!Serial); // Wait for serial port to connect.
+    while (!Serial)
+        ; // Wait for serial port to connect.
 
     Serial.println("Initializing system...");
 
@@ -37,6 +41,30 @@ void setup() {
     Serial.println("IMU setup complete.");
 }
 
-void loop() {
-    delay(1000);
+void loop()
+{
+    if (Serial.available())
+    {
+        char c = Serial.read();
+        if (c == 'p')
+        {
+            Serial.println("Pausing IMU...");
+            imu.pause();
+        }
+        else if (c == 'r')
+        {
+            Serial.println("Resuming IMU...");
+            imu.resume();
+        }
+        else
+        {
+            int num = c - '0';
+            imu.setDebugStatus(num);
+        }
+        while (Serial.available())
+        {
+            Serial.read(); // Clear the buffer
+        }
+    }
+    delay(200);
 }

@@ -21,6 +21,8 @@ public:
     PDL_Tilt_Sensor();
     void init(uint32_t priority = 1);
     void deinit();
+    void pause();
+    void resume();
     void calibrate();
     float getAngleX() const;
     float getAngleY() const;
