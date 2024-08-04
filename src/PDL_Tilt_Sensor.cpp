@@ -85,7 +85,11 @@ void PDL_Tilt_Sensor::processIMUData()
     angle_x = atan2(sqrt(ay * ay + az * az), ax) * 180 / M_PI - ax_offset;
     angle_y = atan2(sqrt(ax * ax + az * az), ay) * 180 / M_PI - ay_offset;
 
+    azumith = atan2(ay, ax) * 180 / M_PI;
+    azumith_magnitude = sqrt(ax * ax + ay * ay) / sqrt(ax * ax + ay * ay + az * az);
+
     checkTiltStatus();
+    checkAzumith();
 
     switch (debug_status)
     {
@@ -147,6 +151,16 @@ void PDL_Tilt_Sensor::setLevelCallback(IMUEventCallback callback)
     level_callback = callback;
 }
 
+void PDL_Tilt_Sensor::setAzumithUpdateCallback(IMUAzumithUpdateCallback callback)
+{
+    if(callback == nullptr)
+    {
+        azumith_update_callback = nullptr;
+        return;
+    }
+    azumith_update_callback = callback;
+}
+
 float PDL_Tilt_Sensor::getAngleX() const
 {
     return angle_x;
@@ -160,6 +174,16 @@ float PDL_Tilt_Sensor::getAngleY() const
 bool PDL_Tilt_Sensor::isVertical() const
 {
     return is_vertical;
+}
+
+float PDL_Tilt_Sensor::getAzumith() const
+{
+    return azumith;
+}
+
+float PDL_Tilt_Sensor::getAzumithMagnitude() const
+{
+    return azumith_magnitude;
 }
 
 void PDL_Tilt_Sensor::checkTiltStatus()
@@ -179,5 +203,17 @@ void PDL_Tilt_Sensor::checkTiltStatus()
         {
             tilted_callback();
         }
+    }
+}
+
+void PDL_Tilt_Sensor::checkAzumith()
+{
+    if (azumith_update_callback)
+    {
+        AzumithCbsContext_t context = {
+            .azumith = azumith,
+            .azumith_magnitude = azumith_magnitude,
+        };
+        azumith_update_callback(&context);
     }
 }
