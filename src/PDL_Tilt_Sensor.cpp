@@ -82,11 +82,19 @@ void PDL_Tilt_Sensor::processIMUData()
     float ay = ay_filter.add(ay_raw);
     float az = az_filter.add(az_raw);
 
-    angle_x = atan2(sqrt(ay * ay + az * az), ax) * 180 / M_PI - ax_offset;
-    angle_y = atan2(sqrt(ax * ax + az * az), ay) * 180 / M_PI - ay_offset;
+    angle_x = atan2(sqrt(ay * ay + az * az), ax) * 180 / M_PI - ax_offset - 0.5 * (x_lower_threshold + x_upper_threshold);
+    angle_y = atan2(sqrt(ax * ax + az * az), ay) * 180 / M_PI - ay_offset - 0.5 * (y_lower_threshold + y_upper_threshold);
 
-    azumith = atan2(ay, ax) * 180 / M_PI;
-    azumith_magnitude = sqrt(ax * ax + ay * ay) / sqrt(ax * ax + ay * ay + az * az);
+    // rotate [0;0;1] vector by angle_x and angle_y
+    float x2 = sin(angle_x * M_PI / 180 + angle_y * M_PI / 180);
+    float y2 = -sin(angle_x * M_PI / 180);
+    float z2 = cos(angle_x * M_PI / 180 + angle_y * M_PI / 180);
+
+    azumith = atan2(y2, x2) * 180 / M_PI;
+    azumith_magnitude = sqrt(x2 * x2 + y2 * y2) / sqrt(x2 * x2 + y2 * y2 + z2 * z2);
+
+    // azumith = atan2(ay, ax) * 180 / M_PI;
+    // azumith_magnitude = sqrt(ax * ax + ay * ay) / sqrt(ax * ax + ay * ay + az * az);
 
     checkTiltStatus();
     checkAzumith();
@@ -153,7 +161,7 @@ void PDL_Tilt_Sensor::setLevelCallback(IMUEventCallback callback)
 
 void PDL_Tilt_Sensor::setAzumithUpdateCallback(IMUAzumithUpdateCallback callback)
 {
-    if(callback == nullptr)
+    if (callback == nullptr)
     {
         azumith_update_callback = nullptr;
         return;
