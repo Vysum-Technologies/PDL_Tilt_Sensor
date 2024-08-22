@@ -196,7 +196,11 @@ float PDL_Tilt_Sensor::getAzumithMagnitude() const
 
 void PDL_Tilt_Sensor::checkTiltStatus()
 {
-    bool currently_vertical = (angle_x > x_lower_threshold && angle_x < x_upper_threshold &&
+    float x_median = 0.5 * (x_lower_threshold + x_upper_threshold);
+    // float x_upper_deviation = abs(x_median -x_upper_threshold);
+    // float x_low_deviation = -abs(x_median -x_lower_threshold);
+    // Serial.printf("x_upper_deviation:%6.3f, x_low_deviation:%6.3f\n", (x_upper_threshold - x_median), (x_lower_threshold - x_median));
+    bool currently_vertical = (angle_x > (x_lower_threshold - x_median) && angle_x < (x_upper_threshold - x_median) &&
                                angle_y > y_lower_threshold && angle_y < y_upper_threshold);
 
     if (currently_vertical != was_vertical)
