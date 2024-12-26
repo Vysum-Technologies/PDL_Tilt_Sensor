@@ -3,24 +3,24 @@
 
 PDL_Tilt_Sensor imu;
 
-void onAzumithUpdate(PDL_Tilt_Sensor::AzumithCbsContext_t *context)
+void onAzimuthUpdate(PDL_Tilt_Sensor::AzimuthCbsContext_t *context)
 {
-    Serial.print("Azumith: ");
-    Serial.print(context->azumith);
+    Serial.print("Azimuth: ");
+    Serial.print(context->azimuth);
     Serial.print(" Magnitude: ");
-    Serial.println(context->azumith_magnitude);
+    Serial.println(context->azimuth_magnitude);
 }
 
 void onTileted()
 {
-    Serial.println("Device is tilted,, enable azumith callback");
-    imu.setAzumithUpdateCallback(onAzumithUpdate);
+    Serial.println("Device is tilted,, enable azimuth callback");
+    imu.setAzimuthUpdateCallback(onAzimuthUpdate);
 }
 
 void onLevel()
 {
-    Serial.println("Device is level, disable azumith callback");
-    imu.setAzumithUpdateCallback(nullptr);
+    Serial.println("Device is level, disable azimuth callback");
+    imu.setAzimuthUpdateCallback(nullptr);
 }
 
 void setup()
@@ -47,7 +47,7 @@ void setup()
     // Set the tilt and level callbacks
     imu.setTiltedCallback(onTileted);
     imu.setLevelCallback(onLevel);
-    imu.setAzumithUpdateCallback(nullptr);
+    imu.setAzimuthUpdateCallback(nullptr);
 
     Serial.println("IMU setup complete.");
 }
