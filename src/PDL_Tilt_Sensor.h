@@ -68,6 +68,7 @@ private:
     void processIMUData();
     void checkTiltStatus();
     void checkAzimuth();
+    void checkFacingUser(int16_t az_raw);
 
     LSM6DS3 imu;
     MovingAverage<int16_t, 8> ax_filter;
@@ -85,6 +86,7 @@ private:
     float x_upper_threshold;
     float y_lower_threshold;
     float y_upper_threshold;
+    float user_facing_z_threshold;
     bool is_vertical;
     bool is_facing_user;
     bool was_vertical;
